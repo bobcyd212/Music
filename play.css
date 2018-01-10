@@ -34,7 +34,7 @@ body{
 }
 .page > .song-bg{
     border: 1px solid yellow;
-    background:url('//i.loli.net/2017/08/29/59a53843424ba.jpg') no-repeat 50%;
+    background:url('./img/bg1.jpeg') no-repeat 50%;
     opacity: 1;
     -webkit-transform: scale(1.5);
     transform: scale(1.5);
@@ -141,7 +141,7 @@ body{
     background: url('//i.loli.net/2017/08/29/59a564e79f7ac.png') no-repeat;
     background-size: contain;
 }
-.m-song-turn::after{
+/*.m-song-turn::after{
     content: " ";
     position: absolute;
     left: 0;
@@ -149,7 +149,7 @@ body{
     top: 0;
     bottom: 0;
     z-index: 3;
-    background: url('//i.loli.net/2017/08/29/59a564e79f7ac.png') no-repeat;
+    background: url('./img/cover1.png') no-repeat;
     background-size: contain;
     animation-play-state: paused;
 }
@@ -157,7 +157,7 @@ body{
     -webkit-animation: circle 20s infinite linear;
     animation: circle 20s infinite linear;
     animation-play-state: running;
-}
+}*/
 .disc::after{
     content: " ";
     position: absolute;
@@ -167,7 +167,7 @@ body{
     width: 84px;
     height: 122px;
     z-index: 5;
-    background:url('//i.loli.net/2017/08/29/59a56afd2f5a2.png') no-repeat;
+    background:url('./img/needle.png') no-repeat;
     background-size: contain;
 }
 .m-song-img{
@@ -180,7 +180,7 @@ body{
     margin: -75px 0 0 -75px;
     border-radius: 50%;
     overflow: hidden;
-    background: url('//i.loli.net/2017/09/01/59a84fcd4b448.png') no-repeat 0 0;
+    background: url('./img/cover.png') no-repeat 0 0;
     background-size: contain;
     animation-play-state: paused;
 }
@@ -222,7 +222,7 @@ body{
 }
 .disc .m-song-plyBtn {
     display: block;
-    background: url('//i.loli.net/2017/09/01/59a870d2b2f26.png') 0 0 no-repeat;
+    background: url('./img/play.png') 0 0 no-repeat;
     background-size: contain;
 }
 .disc.playing .m-song-pause{

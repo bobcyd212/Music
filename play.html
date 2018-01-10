@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<script src="./vendor/jquery.min.js"></script>
+	<link rel="shortcut icon" href="./music.ico">
+	<link rel="stylesheet" href="./play.css">
+	<link rel="stylesheet" href="./reset.css">
+	<title>网易云音乐</title>
+</head>
+<body>
+	<div class="page">
+	    <div class="song-bg"></div>
+	    <div class="song-wrapper">
+	     	<div class="song-container">
+				<div class="disc">
+				     <div class="m-song-turn">
+				        <div class="m-song-img">
+				        	<img src="" alt="song-cover" class="cover" id="cover">
+				        </div>
+				     	
+				     </div>
+				     <span class="m-song-plyBtn"></span>
+				     <svg class="icon m-song-pause" aria-hidden="true">
+                        <use xlink:href="#icon-pause"></use>
+                     </svg>
+				</div>
+		    </div>
+			<div class="song-description">
+					<h2 id="m-song-h2" class="m-song-h2">
+					</h2>
+					<div class="my-song-lyc">
+						<div class="my-song-scroll">
+							<div  id="my-song-iner" class="my-song-iner"></div>
+						</div>
+					</div>
+
+			</div>
+	    </div>	
+		<div class="footer">
+		    <div class="footer-wrap">
+		    	<a href="#">打 开</a>
+			    <a href="＃">下 载</a>
+		    </div>
+		</div> 
+	</div>
+	<script src="./vendor/av-min.js"></script>
+	<script src="./src/AV.js"></script>
+	<script src="//at.alicdn.com/t/font_402687_fx6viopuqbocg14i.js"></script>
+	<script>
+		function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+	</script>
+<script>
+	var id = getParameterByName('id')
+    var audio = document.createElement('audio')
+	var query = new AV.Query('Song');
+    query.get(id).then(function (song) {
+	    var {singer,words,url,cover,Lyric} = song.attributes // console.log(Lyric) 歌词字符串	 
+	    var h2 = `
+	            <span class="m-song-name">${words}</span>
+			    <span class="m-song-gap">-</span>
+				<b class="my-song-autr">${singer}</b>
+	    `
+	    $('#m-song-h2').append(h2)
+	    var $imgCov = $('img#cover')
+	    $imgCov.attr("src",cover) 
+	    audio.src = url
+	     if(Lyric === undefined || Lyric === ''){ $('#my-song-iner').html('纯音乐 没有歌词')}
+	    var parts = Lyric.split('\n')// 数组 console.log(parts instanceof Array) // true
+	    var $songScroll = $('#my-song-iner')
+	    parts.forEach(function(string,index){ 
+	        	var lyc = string.split(']')
+	        	lyc[0] = lyc[0].substring(1)
+	        	var regex = /(\d+):([\d.]+)/
+	        	var matches = lyc[0].match(regex)
+	        	var minute = +matches[1]
+	        	var seconds = +matches[2]
+	        	var time = minute*60+seconds
+	        	var lyric = lyc[1]
+	            var $p = $('<p/>')
+	        	$p.attr('data-time',time).text(lyric)
+	            $p.appendTo($songScroll)   
+	})  
+})
+	   var $dis = $('.disc')
+	   /*audio.play()
+	   $dis.addClass('playing')*/
+	 	/* oncanplay事件会有延迟，这里直接play()所以没有用oncanplay
+	 	video.oncanplay = function(){
+	   	    video.play()
+	   	    $dis.addClass('playing')
+	   }*/
+	   audio.onended = function(){
+	        $dis.removeClass('playing')
+	   }
+	   $('.m-song-pause').on('click',function(){
+	       audio.pause()
+	       $dis.removeClass('playing')
+	   })
+        $('.m-song-plyBtn').on('click',function(){
+	       audio.play()
+	       $dis.addClass('playing')
+	   })
+	 
+        setInterval(function(){
+        	var current = audio.currentTime
+        	var $lines = $('#my-song-iner>p')
+        	for(var i=0;i<$lines.length;i++){
+        		var currentLines = $lines.eq(i).attr('data-time')
+        		var nextLines = $lines.eq(i+1).attr('data-time')
+        		var $whichLine
+        		if( $lines.eq(i+1).length !== 0 && currentLines < current && nextLines  > current){
+                   $whichLine = $lines.eq(i)
+                   break
+        		}
+        	}
+        	if($whichLine){
+        		$whichLine.addClass('active').prev().removeClass('active')
+        		var top = $whichLine.offset().top
+        		var linestop = $('.my-song-iner').offset().top 
+        		var delta = top - linestop - $('.my-song-lyc').height()/4
+        		$('#my-song-iner').css('transform',`translateY(-${delta}px)`)
+        	}
+         },300)
+
+	</script>
+</body>
+</html>
